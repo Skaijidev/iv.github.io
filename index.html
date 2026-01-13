@@ -49,10 +49,11 @@
         <p>Интерактивный объект, реагирующий на курсор.</p>
     </div>
 
-    <!-- Исправленная ссылка без пробелов + актуальная версия -->
+    <!-- Three.js без пробелов и с актуальной версией -->
     <script src="https://cdn.jsdelivr.net/npm/three@0.160.1/build/three.min.js"></script>
     <script>
-        const canvas = document.getElementById('hero-canvas');
+        // Инициализация
+        const canvas = document.getElementById("hero-canvas");
         if (!canvas) {
             console.error("Canvas not found!");
             throw new Error("Missing canvas element");
@@ -73,6 +74,7 @@
         renderer.setSize(window.innerWidth, window.innerHeight);
         renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
 
+        // Создаём 3D объект
         const geometry = new THREE.IcosahedronGeometry(2, 4);
         const material = new THREE.MeshPhongMaterial({
             color: 0x6c5ce7,
@@ -82,29 +84,46 @@
         const mesh = new THREE.Mesh(geometry, material);
         scene.add(mesh);
 
+        // Освещение
         const light = new THREE.PointLight(0xffffff, 1, 100);
         light.position.set(5, 5, 5);
         scene.add(light);
 
-        const ambient = new THREE.AmbientLight(0xffffff, 0.5);
-        scene.add(ambient);
+        const ambientLight = new THREE.AmbientLight(0xffffff, 0.5);
+        scene.add(ambientLight);
 
-        let mouseX = 0, mouseY = 0;
-        window.addEventListener('mousemove', (e) => {
-            mouseX = (e.clientX / window.innerWidth) * 2 - 1;
-            mouseY = -(e.clientY / window.innerHeight) * 2 + 1;
+        // Переменные для курсора
+        let mouseX = 0;
+        let mouseY = 0;
+
+        window.addEventListener("mousemove", (event) => {
+            mouseX = (event.clientX / window.innerWidth) * 2 - 1;          // X: от -1 (слева) до +1 (справа)
+            mouseY = -(event.clientY / window.innerHeight) * 2 + 1;       // Y: от +1 (сверху) до -1 (снизу)
         });
 
-        window.addEventListener('resize', () => {
+        // Адаптивность
+        window.addEventListener("resize", () => {
             camera.aspect = window.innerWidth / window.innerHeight;
             camera.updateProjectionMatrix();
             renderer.setSize(window.innerWidth, window.innerHeight);
         });
 
+        // Плавная анимация с интерполяцией
+        let targetRotationX = 0;
+        let targetRotationY = 0;
+        const rotationSpeed = 0.05;
+
         function animate() {
             requestAnimationFrame(animate);
-            mesh.rotation.x += 0.003 + mouseY * 0.1;
-            mesh.rotation.y += 0.005 + mouseX * 0.1;
+
+            // Целевые углы поворота на основе позиции мыши
+            targetRotationX = mouseY * 1.5;
+            targetRotationY = mouseX * 1.5;
+
+            // Плавный переход к цели
+            mesh.rotation.x += (targetRotationX - mesh.rotation.x) * rotationSpeed;
+            mesh.rotation.y += (targetRotationY - mesh.rotation.y) * rotationSpeed;
+
             renderer.render(scene, camera);
         }
 
