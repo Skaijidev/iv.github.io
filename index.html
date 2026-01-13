@@ -1,9 +1,11 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="ru">
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>ИП Войтов Илья Андреевич</title>
+    <!-- Подключаем Bebas Neue с Google Fonts (с кириллицей) -->
+    <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&display=swap" rel="stylesheet">
     <style>
         * {
             margin: 0;
@@ -14,7 +16,7 @@
             width: 100vw;
             height: 100vh;
             background: linear-gradient(135deg, #8a2be2, #9400d3);
-            font-family: 'Courier New', monospace;
+            font-family: 'Bebas Neue', sans-serif; /* ✅ Новый шрифт */
             color: white;
             overflow: hidden;
             position: relative;
@@ -42,30 +44,28 @@
             pointer-events: none;
         }
         .text h1 {
-            font-size: 6rem;
-            font-weight: bold;
-            text-shadow: 0 0 10px #fff, 0 0 20px #fff;
+            font-size: 7rem; /* увеличил для жирности */
             letter-spacing: -2px;
             line-height: 1;
+            text-shadow: 0 0 10px #fff, 0 0 20px #fff;
         }
         .text p {
-            font-size: 1.2rem;
-            opacity: 0.8;
-            max-width: 400px;
-            margin-top: 1rem;
+            font-size: 1.8rem; /* тоже крупнее */
+            opacity: 0.9;
+            max-width: 500px;
+            margin-top: 1.2rem;
+            text-shadow: 0 0 5px rgba(255,255,255,0.7);
         }
         .cta {
             position: absolute;
-            bottom: 10%;
+            bottom: 15%;
             left: 5%;
-            font-size: 2rem;
-            font-weight: bold;
-            color: #fff;
-            text-shadow: 0 0 10px #fff;
+            font-size: 2.4rem;
             cursor: pointer;
             pointer-events: auto;
             transition: all 0.3s ease;
             z-index: 20;
+            text-shadow: 0 0 10px #fff;
         }
         .cta:hover {
             transform: scale(1.1);
@@ -78,9 +78,9 @@
             width: 180px;
             height: 180px;
             background: url('photo_2026-01-13_13-23-04.jpg') no-repeat center;
-            background-size: contain; /* ✅ Не обрезает */
+            background-size: contain;
             padding: 10px;
-            background-color: rgba(255,255,255,0.95); /* ✅ Белый фон с прозрачностью */
+            background-color: rgba(255,255,255,0.95);
             border: 2px solid rgba(255,255,255,0.3);
             border-radius: 15px;
             box-shadow: 0 0 20px rgba(255,255,255,0.5);
@@ -88,26 +88,55 @@
             z-index: 20;
             animation: pulse 2s infinite ease-in-out;
         }
-        .scrolling-text {
+
+        /* Центральная строка */
+        .scrolling-text-center {
             position: absolute;
-            bottom: 5px;
+            top: 50%;
             left: 0;
             width: 100%;
-            height: 30px;
-            background: rgba(0,0,0,0.3);
+            height: 80px;
+            margin-top: -40px;
+            background: rgba(0,0,0,0.2);
             color: white;
-            font-weight: bold;
-            font-size: 1.2rem;
+            font-family: 'Bebas Neue', sans-serif;
+            font-size: 2.2rem;
             white-space: nowrap;
             overflow: hidden;
-            z-index: 5; /* За 3D-объектом, но перед фоном */
+            z-index: 5;
             pointer-events: none;
+            display: flex;
+            align-items: center;
+            justify-content: center;
         }
-        .scrolling-text span {
+        .scrolling-text-center span {
             display: inline-block;
             padding-left: 100vw;
             animation: scroll 20s linear infinite;
         }
+
+        /* Нижняя строка */
+        .scrolling-text-bottom {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 36px;
+            background: rgba(0,0,0,0.3);
+            color: white;
+            font-family: 'Bebas Neue', sans-serif;
+            font-size: 1.3rem;
+            white-space: nowrap;
+            overflow: hidden;
+            z-index: 5;
+            pointer-events: none;
+        }
+        .scrolling-text-bottom span {
+            display: inline-block;
+            padding-left: 100vw;
+            animation: scroll 25s linear infinite;
+        }
+
         @keyframes scroll {
             0% { transform: translateX(0); }
             100% { transform: translateX(-100%); }
@@ -125,18 +154,21 @@
     <div class="container">
         <div class="text">
             <h1>ИП ВОЙТОВ ИЛЬЯ АНДРЕЕВИЧ</h1>
-            <p>Разработка проектов на Unity</p>
+            <p>РАЗРАБОТКА ПРОЕКТОВ НА UNITY</p>
         </div>
-        <div class="cta" onclick="window.open('https://t.me/ivdevv', '_blank')">Telegram</div>
+        <div class="cta" onclick="window.open('https://t.me/ivdevv', '_blank')">TELEGRAM</div>
         <div class="qr-code" onclick="window.open('https://t.me/ivdevv', '_blank')"></div>
-        <div class="scrolling-text">
+        
+        <div class="scrolling-text-center">
             <span>ИП ВОЙТОВ ИЛЬЯ АНДРЕЕВИЧ — РАЗРАБОТКА ПРОЕКТОВ НА UNITY &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
+        </div>
+        <div class="scrolling-text-bottom">
+            <span>ИНН: 10024829459 | ОГРНИП: 222999101 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
         </div>
     </div>
 
     <script src="https://cdn.jsdelivr.net/npm/three@0.160.1/build/three.min.js"></script>
     <script>
-        // Инициализация Three.js
         const canvas = document.getElementById("hero-canvas");
         const scene = new THREE.Scene();
         scene.background = new THREE.Color(0x8a2be2);
@@ -153,7 +185,6 @@
         renderer.setSize(window.innerWidth, window.innerHeight);
         renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
 
-        // Создаём икосаэдр
         const geometry = new THREE.IcosahedronGeometry(2, 4);
         const material = new THREE.MeshStandardMaterial({
             color: 0xffffff,
@@ -163,7 +194,6 @@
         const mesh = new THREE.Mesh(geometry, material);
         scene.add(mesh);
 
-        // Освещение
         const dirLight = new THREE.DirectionalLight(0xffffff, 1.5);
         dirLight.position.set(4, 4, 5);
         scene.add(dirLight);
@@ -171,21 +201,18 @@
         const ambient = new THREE.AmbientLight(0x3a3a6a, 0.3);
         scene.add(ambient);
 
-        // Курсор
         let mouseX = 0, mouseY = 0;
         window.addEventListener("mousemove", (e) => {
             mouseX = (e.clientX / window.innerWidth) * 2 - 1;
             mouseY = -(e.clientY / window.innerHeight) * 2 + 1;
         });
 
-        // Адаптивность
         window.addEventListener("resize", () => {
             camera.aspect = window.innerWidth / window.innerHeight;
             camera.updateProjectionMatrix();
             renderer.setSize(window.innerWidth, window.innerHeight);
         });
 
-        // Анимация
         let targetX = 0, targetY = 0;
         const speed = 0.06;
 
@@ -198,7 +225,6 @@
             mesh.rotation.x += (targetX - mesh.rotation.x) * speed;
             mesh.rotation.y += (targetY - mesh.rotation.y) * speed;
 
-            // Лёгкое масштабирование при движении курсора
             const scale = 1 + Math.abs(mouseX) * 0.1;
             mesh.scale.set(scale, scale, scale);
 
