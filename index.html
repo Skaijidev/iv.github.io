@@ -191,13 +191,13 @@
             0.1,
             100
         );
-        camera.position.set(0, 1.2, 4);
+        camera.position.set(0, 2, 10);
 
-        const dirLight = new THREE.DirectionalLight(0xffffff, 1.0);
-        dirLight.position.set(2, 4, 5);
+        const dirLight = new THREE.DirectionalLight(0xffffff, 1.2);
+        dirLight.position.set(3, 5, 6);
         scene.add(dirLight);
 
-        const ambient = new THREE.AmbientLight(0xffffff, 0.5);
+        const ambient = new THREE.AmbientLight(0xffffff, 0.6);
         scene.add(ambient);
 
         let model = null;
@@ -207,11 +207,14 @@
             'kuma_heavy_robot_r-9000s.glb',
             function (gltf) {
                 model = gltf.scene;
-                model.scale.set(3, 3, 3);
-                model.position.set(0, -0.5, 0);
+                // Грубый масштаб и позиция, чтобы точно было видно
+                model.scale.set(8, 8, 8);
+                model.position.set(0, -1.5, 0);
                 model.rotation.set(0, Math.PI * 0.2, 0);
+
                 scene.add(model);
-                camera.lookAt(0, 0.5, 0);
+
+                camera.lookAt(0, 0, 0);
             },
             undefined,
             function (error) {
