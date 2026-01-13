@@ -88,58 +88,54 @@
             animation: pulse 2s infinite ease-in-out;
         }
 
-        .scrolling-text-center {
+        /* общие настройки для бегущих строк */
+        .scrolling-text-center,
+        .scrolling-text-bottom {
             position: absolute;
-            top: 50%;
             left: 0;
             width: 100%;
-            height: auto;
+            white-space: nowrap;
+            overflow: hidden;
+            pointer-events: none;
+        }
+
+        .scrolling-text-center {
+            top: 50%;
             margin-top: -40px;
             color: white;
             font-family: 'Bebas Neue', sans-serif;
             font-size: 5.5rem;
-            white-space: nowrap;
-            overflow: hidden;
             z-index: 0;
-            pointer-events: none;
-            text-align: center;
-        }
-        .scrolling-text-center span {
-            display: inline-block;
-            animation: scroll-center 25s linear infinite;
+            text-align: left;
         }
 
         .scrolling-text-bottom {
-            position: absolute;
             bottom: 0;
-            left: 0;
-            width: 100%;
             height: 36px;
             background: rgba(0,0,0,0.3);
             color: white;
             font-family: 'Bebas Neue', sans-serif;
             font-size: 1.3rem;
-            white-space: nowrap;
-            overflow: hidden;
             z-index: 5;
-            pointer-events: none;
-        }
-        .scrolling-text-bottom span {
-            display: inline-block;
-            animation: scroll-bottom 20s linear infinite;
         }
 
-        @keyframes scroll-center {
-            0% { transform: translateX(0); }
-            100% { transform: translateX(-100%); }
+        .marquee-track {
+            display: inline-block;
+            animation: marquee 20s linear infinite;
         }
-        @keyframes scroll-bottom {
-            0% { transform: translateX(0); }
-            100% { transform: translateX(-100%); }
+
+        .scrolling-text-center .marquee-track {
+            animation-duration: 25s;
         }
+
+        @keyframes marquee {
+            0%   { transform: translateX(0); }
+            100% { transform: translateX(-50%); }
+        }
+
         @keyframes pulse {
-            0% { transform: scale(1); box-shadow: 0 0 20px rgba(255,255,255,0.5); }
-            50% { transform: scale(1.05); box-shadow: 0 0 30px rgba(255,255,255,0.8); }
+            0%   { transform: scale(1); box-shadow: 0 0 20px rgba(255,255,255,0.5); }
+            50%  { transform: scale(1.05); box-shadow: 0 0 30px rgba(255,255,255,0.8); }
             100% { transform: scale(1); box-shadow: 0 0 20px rgba(255,255,255,0.5); }
         }
     </style>
@@ -156,24 +152,20 @@
         <div class="qr-code" onclick="window.open('https://t.me/ivdevv', '_blank')"></div>
         
         <div class="scrolling-text-center">
-            <span>
+            <div class="marquee-track">
                 IP VOITOV ILYA ANDREEVICH — PROJECT DEVELOPMENT ON UNITY&nbsp;&nbsp;&nbsp;&nbsp;
                 IP VOITOV ILYA ANDREEVICH — PROJECT DEVELOPMENT ON UNITY&nbsp;&nbsp;&nbsp;&nbsp;
-                IP VOITOV ILYA ANDREEVICH — PROJECT DEVELOPMENT ON UNITY&nbsp;&nbsp;&nbsp;&nbsp;
-                IP VOITOV ILYA ANDREEVICH — PROJECT DEVELOPMENT ON UNITY&nbsp;&nbsp;&nbsp;&nbsp;
-            </span>
+            </div>
         </div>
         <div class="scrolling-text-bottom">
-            <span>
+            <div class="marquee-track">
                 INN: 10024829459 | OGRNIP: 222999101&nbsp;&nbsp;&nbsp;&nbsp;
                 INN: 10024829459 | OGRNIP: 222999101&nbsp;&nbsp;&nbsp;&nbsp;
-                INN: 10024829459 | OGRNIP: 222999101&nbsp;&nbsp;&nbsp;&nbsp;
-                INN: 10024829459 | OGRNIP: 222999101&nbsp;&nbsp;&nbsp;&nbsp;
-            </span>
+            </div>
         </div>
     </div>
 
-    <!-- ВЕСЬ JS КАК ES-МОДУЛЬ -->
+    <!-- Three.js + GLTFLoader модуль -->
     <script type="module">
         import * as THREE from 'https://cdn.jsdelivr.net/npm/three@0.160.1/build/three.module.js';
         import { GLTFLoader } from 'https://cdn.jsdelivr.net/npm/three@0.160.1/examples/jsm/loaders/GLTFLoader.js';
@@ -202,15 +194,15 @@
         const ambient = new THREE.AmbientLight(0x3a3a6a, 0.3);
         scene.add(ambient);
 
-        // загрузка модели
+        // модель из корня репозитория (рядом с index.html)
         let model = null;
         const loader = new GLTFLoader();
         loader.load(
-            'https://raw.githubusercontent.com/KhronosGroup/glTF-Sample-Models/master/2.0/RiggedFigure/glTF-Binary/RiggedFigure.glb',
+            'kuma_heavy_robot_r-9000s.glb',
             (gltf) => {
                 model = gltf.scene;
-                model.scale.set(0.8, 0.8, 0.8);
-                model.position.y = -1;
+                model.scale.set(1.2, 1.2, 1.2);
+                model.position.set(0, -1.2, 0);
                 scene.add(model);
             },
             undefined,
@@ -222,7 +214,9 @@
                     metalness: 0.8,
                     roughness: 0.2
                 });
-                scene.add(new THREE.Mesh(geo, mat));
+                const fallback = new THREE.Mesh(geo, mat);
+                fallback.position.set(0, 0, 0);
+                scene.add(fallback);
             }
         );
 
