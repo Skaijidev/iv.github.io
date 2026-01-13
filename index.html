@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>My 3D Hero</title>
+    <title>Sanshu-style 3D Site</title>
     <style>
         * {
             margin: 0;
@@ -13,54 +13,119 @@
         body {
             width: 100vw;
             height: 100vh;
-            background: #0a0e27;
-            font-family: system-ui, -apple-system, sans-serif;
-            color: #fff;
+            background: linear-gradient(135deg, #8a2be2, #9400d3);
+            font-family: 'Courier New', monospace;
+            color: white;
             overflow: hidden;
+            position: relative;
         }
         canvas {
             display: block;
             width: 100%;
             height: 100%;
+            z-index: 1;
+        }
+        .container {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 10;
         }
         .text {
             position: absolute;
-            top: 50%;
+            top: 5%;
             left: 5%;
-            transform: translateY(-50%);
             z-index: 10;
             pointer-events: none;
         }
         .text h1 {
-            font-size: 4rem;
-            margin-bottom: 1rem;
+            font-size: 6rem;
+            font-weight: bold;
+            text-shadow: 0 0 10px #fff, 0 0 20px #fff;
+            letter-spacing: -2px;
+            line-height: 1;
         }
         .text p {
             font-size: 1.2rem;
-            opacity: 0.7;
+            opacity: 0.8;
             max-width: 400px;
+            margin-top: 1rem;
+        }
+        .cta {
+            position: absolute;
+            bottom: 10%;
+            left: 5%;
+            font-size: 2rem;
+            font-weight: bold;
+            color: #fff;
+            text-shadow: 0 0 10px #fff;
+            cursor: pointer;
+            pointer-events: auto;
+            transition: all 0.3s ease;
+        }
+        .cta:hover {
+            transform: scale(1.1);
+            text-shadow: 0 0 20px #fff;
+        }
+        .lite-mode {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            background: rgba(255,255,255,0.2);
+            padding: 10px 20px;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            cursor: pointer;
+            pointer-events: auto;
+            z-index: 100;
+            backdrop-filter: blur(5px);
+        }
+        .lite-mode.active {
+            background: rgba(255,255,255,0.9);
+            color: #000;
+        }
+        .pixel-cross {
+            position: absolute;
+            width: 20px;
+            height: 20px;
+            background: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20"><path d="M10 2L12 4H18V10L20 12V18H18V24H12L10 22L8 24H2V18H0V12L2 10V4H8L10 2Z" fill="white"/></svg>') no-repeat center;
+            pointer-events: none;
+            opacity: 0.7;
         }
     </style>
 </head>
 <body>
     <canvas id="hero-canvas"></canvas>
-    <div class="text">
-        <h1>Мой 3D сайт</h1>
-        <p>Интерактивный объект, реагирующий на курсор.</p>
+
+    <div class="container">
+        <div class="text">
+            <h1>SANSHU</h1>
+            <p>A NEW ERA OF STORYTELLING POWERED BY COMMUNITY AND WEB3 TECHNOLOGY.</p>
+        </div>
+        <div class="cta">CLICK HERE ></div>
+        <div class="lite-mode">LITE MODE</div>
     </div>
 
-    <!-- Three.js — без пробелов! -->
+    <!-- Добавим несколько пиксельных крестов -->
+    <script>
+        for (let i = 0; i < 8; i++) {
+            const cross = document.createElement('div');
+            cross.classList.add('pixel-cross');
+            cross.style.left = `${Math.random() * 100}%`;
+            cross.style.top = `${Math.random() * 100}%`;
+            document.body.appendChild(cross);
+        }
+    </script>
+
     <script src="https://cdn.jsdelivr.net/npm/three@0.160.1/build/three.min.js"></script>
     <script>
-        // Инициализация
+        // Инициализация Three.js
         const canvas = document.getElementById("hero-canvas");
-        if (!canvas) {
-            console.error("Canvas not found!");
-            throw new Error("Missing canvas element");
-        }
-
         const scene = new THREE.Scene();
-        scene.background = new THREE.Color(0x0a0e27);
+        scene.background = new THREE.Color(0x8a2be2);
 
         const camera = new THREE.PerspectiveCamera(
             75,
@@ -74,35 +139,29 @@
         renderer.setSize(window.innerWidth, window.innerHeight);
         renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
 
-        // Геометрия и материал — с лёгким emissive для контраста
+        // Создаём икосаэдр
         const geometry = new THREE.IcosahedronGeometry(2, 4);
-        const material = new THREE.MeshPhongMaterial({
-            color: 0x6c5ce7,
-            emissive: 0x1a1435, // очень тёмный, но даёт объём
-            shininess: 100
+        const material = new THREE.MeshStandardMaterial({
+            color: 0xffffff,
+            metalness: 0.8,
+            roughness: 0.1
         });
         const mesh = new THREE.Mesh(geometry, material);
         scene.add(mesh);
 
-        // Основной свет (ближе к камере)
-        const mainLight = new THREE.PointLight(0xffffff, 1.2, 80);
-        mainLight.position.set(3, 3, 5);
-        scene.add(mainLight);
+        // Освещение
+        const dirLight = new THREE.DirectionalLight(0xffffff, 1.5);
+        dirLight.position.set(4, 4, 5);
+        scene.add(dirLight);
 
-        // Мягкий ambient light с фиолетовым оттенком
-        const ambientLight = new THREE.AmbientLight(0x4a4a8a, 0.4);
-        scene.add(ambientLight);
-
-        // Контровой свет (сзади)
-        const rimLight = new THREE.PointLight(0x3a3a7a, 0.6, 60);
-        rimLight.position.set(-4, -4, -4);
-        scene.add(rimLight);
+        const ambient = new THREE.AmbientLight(0x3a3a6a, 0.3);
+        scene.add(ambient);
 
         // Курсор
         let mouseX = 0, mouseY = 0;
-        window.addEventListener("mousemove", (event) => {
-            mouseX = (event.clientX / window.innerWidth) * 2 - 1;
-            mouseY = -(event.clientY / window.innerHeight) * 2 + 1;
+        window.addEventListener("mousemove", (e) => {
+            mouseX = (e.clientX / window.innerWidth) * 2 - 1;
+            mouseY = -(e.clientY / window.innerHeight) * 2 + 1;
         });
 
         // Адаптивность
@@ -112,24 +171,47 @@
             renderer.setSize(window.innerWidth, window.innerHeight);
         });
 
-        // Анимация с плавной интерполяцией
-        let targetRotationX = 0;
-        let targetRotationY = 0;
-        const rotationSpeed = 0.05;
+        // Анимация
+        let targetX = 0, targetY = 0;
+        const speed = 0.06;
 
         function animate() {
             requestAnimationFrame(animate);
 
-            targetRotationX = mouseY * 1.5;
-            targetRotationY = mouseX * 1.5;
+            targetX = mouseY * 1.8;
+            targetY = mouseX * 1.8;
 
-            mesh.rotation.x += (targetRotationX - mesh.rotation.x) * rotationSpeed;
-            mesh.rotation.y += (targetRotationY - mesh.rotation.y) * rotationSpeed;
+            mesh.rotation.x += (targetX - mesh.rotation.x) * speed;
+            mesh.rotation.y += (targetY - mesh.rotation.y) * speed;
+
+            // Лёгкое масштабирование при движении курсора
+            const scale = 1 + Math.abs(mouseX) * 0.1;
+            mesh.scale.set(scale, scale, scale);
 
             renderer.render(scene, camera);
         }
 
         animate();
+
+        // Переключатель LITE MODE
+        const liteMode = document.querySelector('.lite-mode');
+        liteMode.addEventListener('click', () => {
+            liteMode.classList.toggle('active');
+            if (liteMode.classList.contains('active')) {
+                document.body.style.background = 'linear-gradient(135deg, #f0f0f0, #ffffff)';
+                scene.background = new THREE.Color(0xf0f0f0);
+                mesh.material.color.set(0x000000);
+            } else {
+                document.body.style.background = 'linear-gradient(135deg, #8a2be2, #9400d3)';
+                scene.background = new THREE.Color(0x8a2be2);
+                mesh.material.color.set(0xffffff);
+            }
+        });
+
+        // Клик по "CLICK HERE"
+        document.querySelector('.cta').addEventListener('click', () => {
+            alert('Welcome to the new era of storytelling!');
+        });
     </script>
 </body>
 </html>
