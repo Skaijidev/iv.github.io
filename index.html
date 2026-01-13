@@ -43,6 +43,7 @@
     </style>
 </head>
 <body>
+    anvas id="hero-canvas"></canvas>
     <div class="text">
         <h1>Мой 3D сайт</h1>
         <p>Интерактивный объект, реагирующий на курсор.</p>
@@ -50,10 +51,7 @@
 
     <script src="https://cdn.jsdelivr.net/npm/three@r128/build/three.min.js"></script>
     <script>
-        // Scene setup
-        const canvas = document.querySelector('canvas') || document.createElement('canvas');
-        if (!canvas.parentElement) document.body.insertBefore(canvas, document.body.firstChild);
-        
+        const canvas = document.getElementById('hero-canvas');
         const scene = new THREE.Scene();
         scene.background = new THREE.Color(0x0a0e27);
         
@@ -65,11 +63,10 @@
         );
         camera.position.z = 5;
         
-        const renderer = new THREE.WebGLRenderer({ canvas, antialias: true, alpha: false });
+        const renderer = new THREE.WebGLRenderer({ canvas, antialias: true });
         renderer.setSize(window.innerWidth, window.innerHeight);
         renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
         
-        // Create geometry
         const geometry = new THREE.IcosahedronGeometry(2, 4);
         const material = new THREE.MeshPhongMaterial({
             color: 0x6c5ce7,
@@ -79,7 +76,6 @@
         const mesh = new THREE.Mesh(geometry, material);
         scene.add(mesh);
         
-        // Lights
         const light = new THREE.PointLight(0xffffff, 1, 100);
         light.position.set(5, 5, 5);
         scene.add(light);
@@ -87,27 +83,22 @@
         const ambient = new THREE.AmbientLight(0xffffff, 0.5);
         scene.add(ambient);
         
-        // Mouse tracking
         let mouseX = 0, mouseY = 0;
         window.addEventListener('mousemove', (e) => {
             mouseX = (e.clientX / window.innerWidth) * 2 - 1;
             mouseY = -(e.clientY / window.innerHeight) * 2 + 1;
         });
         
-        // Resize
         window.addEventListener('resize', () => {
             camera.aspect = window.innerWidth / window.innerHeight;
             camera.updateProjectionMatrix();
             renderer.setSize(window.innerWidth, window.innerHeight);
         });
         
-        // Animation loop
         function animate() {
             requestAnimationFrame(animate);
-            
             mesh.rotation.x += 0.003 + mouseY * 0.1;
             mesh.rotation.y += 0.005 + mouseX * 0.1;
-            
             renderer.render(scene, camera);
         }
         animate();
