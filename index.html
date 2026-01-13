@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>IV - UNITY 333DEVELOPER</title>
+    <title>IV - UNITY 1212DEVELOPER</title>
     <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&display=swap" rel="stylesheet">
     <style>
         * {
@@ -88,7 +88,6 @@
             animation: pulse 2s infinite ease-in-out;
         }
 
-        /* Бегущие строки */
         .scrolling-text-center,
         .scrolling-text-bottom {
             position: absolute;
@@ -183,22 +182,33 @@
         renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
 
         const scene = new THREE.Scene();
-        scene.background = new THREE.Color(0x8a2be2);
+        scene.background = new THREE.Color(0x000000); // временно чёрный фон, чтобы всё, что светится, было видно
 
         const camera = new THREE.PerspectiveCamera(
             60,
             window.innerWidth / window.innerHeight,
             0.1,
-            100
+            200
         );
         camera.position.set(0, 2, 10);
 
-        const dirLight = new THREE.DirectionalLight(0xffffff, 1.2);
-        dirLight.position.set(3, 5, 6);
+        const dirLight = new THREE.DirectionalLight(0xffffff, 2.0);
+        dirLight.position.set(5, 8, 10);
         scene.add(dirLight);
 
-        const ambient = new THREE.AmbientLight(0xffffff, 0.6);
+        const ambient = new THREE.AmbientLight(0xffffff, 0.8);
         scene.add(ambient);
+
+        // Fallback-объект, чтобы ВСЕГДА что-то было видно
+        const debugGeo = new THREE.IcosahedronGeometry(2.5, 3);
+        const debugMat = new THREE.MeshStandardMaterial({
+            color: 0xff3366,
+            metalness: 0.6,
+            roughness: 0.3
+        });
+        const debugMesh = new THREE.Mesh(debugGeo, debugMat);
+        debugMesh.position.set(0, 0, 0);
+        scene.add(debugMesh);
 
         let model = null;
         const loader = new THREE.GLTFLoader();
@@ -206,27 +216,20 @@
         loader.load(
             'kuma_heavy_robot_r-9000s.glb',
             function (gltf) {
+                console.log('GLB loaded', gltf);
                 model = gltf.scene;
-                // Грубый масштаб и позиция, чтобы точно было видно
+
                 model.scale.set(8, 8, 8);
                 model.position.set(0, -1.5, 0);
                 model.rotation.set(0, Math.PI * 0.2, 0);
 
                 scene.add(model);
-
                 camera.lookAt(0, 0, 0);
             },
             undefined,
             function (error) {
                 console.error('Ошибка загрузки модели:', error);
-                const geo = new THREE.IcosahedronGeometry(2, 4);
-                const mat = new THREE.MeshStandardMaterial({
-                    color: 0xff3366,
-                    metalness: 0.8,
-                    roughness: 0.2
-                });
-                const fallback = new THREE.Mesh(geo, mat);
-                scene.add(fallback);
+                // Если модель не загрузилась, остаётся только debugMesh
             }
         );
 
