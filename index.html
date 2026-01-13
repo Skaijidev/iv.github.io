@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Sanshu-style 3D Site</title>
+    <title>ИП Войтов Илья Андреевич</title>
     <style>
         * {
             margin: 0;
@@ -65,27 +65,26 @@
             cursor: pointer;
             pointer-events: auto;
             transition: all 0.3s ease;
+            z-index: 20;
         }
         .cta:hover {
             transform: scale(1.1);
             text-shadow: 0 0 20px #fff;
         }
-        .lite-mode {
+        .qr-code {
             position: absolute;
             top: 20px;
             right: 20px;
-            background: rgba(255,255,255,0.2);
-            padding: 10px 20px;
-            border-radius: 20px;
-            font-size: 0.9rem;
-            cursor: pointer;
+            width: 180px;
+            height: 180px;
+            background: url('https://i.imgur.com/9FfGjWx.png') no-repeat center;
+            background-size: contain;
+            border: 2px solid rgba(255,255,255,0.3);
+            border-radius: 10px;
+            box-shadow: 0 0 20px rgba(255,255,255,0.5);
             pointer-events: auto;
-            z-index: 100;
-            backdrop-filter: blur(5px);
-        }
-        .lite-mode.active {
-            background: rgba(255,255,255,0.9);
-            color: #000;
+            z-index: 20;
+            animation: pulse 2s infinite ease-in-out;
         }
         .pixel-cross {
             position: absolute;
@@ -95,6 +94,12 @@
             pointer-events: none;
             opacity: 0.7;
         }
+
+        @keyframes pulse {
+            0% { transform: scale(1); box-shadow: 0 0 20px rgba(255,255,255,0.5); }
+            50% { transform: scale(1.05); box-shadow: 0 0 30px rgba(255,255,255,0.8); }
+            100% { transform: scale(1); box-shadow: 0 0 20px rgba(255,255,255,0.5); }
+        }
     </style>
 </head>
 <body>
@@ -102,14 +107,14 @@
 
     <div class="container">
         <div class="text">
-            <h1>SANSHU</h1>
-            <p>A NEW ERA OF STORYTELLING POWERED BY COMMUNITY AND WEB3 TECHNOLOGY.</p>
+            <h1>ИП ВОЙТОВ ИЛЬЯ АНДРЕЕВИЧ</h1>
+            <p>Разработка проектов на Unity</p>
         </div>
-        <div class="cta">CLICK HERE ></div>
-        <div class="lite-mode">LITE MODE</div>
+        <div class="cta" onclick="window.open('https://t.me/ivdevv', '_blank')">Telegram</div>
+        <div class="qr-code" onclick="window.open('https://t.me/ivdevv', '_blank')"></div>
     </div>
 
-    <!-- Добавим несколько пиксельных крестов -->
+    <!-- Пиксельные крестики -->
     <script>
         for (let i = 0; i < 8; i++) {
             const cross = document.createElement('div');
@@ -192,26 +197,6 @@
         }
 
         animate();
-
-        // Переключатель LITE MODE
-        const liteMode = document.querySelector('.lite-mode');
-        liteMode.addEventListener('click', () => {
-            liteMode.classList.toggle('active');
-            if (liteMode.classList.contains('active')) {
-                document.body.style.background = 'linear-gradient(135deg, #f0f0f0, #ffffff)';
-                scene.background = new THREE.Color(0xf0f0f0);
-                mesh.material.color.set(0x000000);
-            } else {
-                document.body.style.background = 'linear-gradient(135deg, #8a2be2, #9400d3)';
-                scene.background = new THREE.Color(0x8a2be2);
-                mesh.material.color.set(0xffffff);
-            }
-        });
-
-        // Клик по "CLICK HERE"
-        document.querySelector('.cta').addEventListener('click', () => {
-            alert('Welcome to the new era of storytelling!');
-        });
     </script>
 </body>
 </html>
