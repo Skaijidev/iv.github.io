@@ -31,55 +31,10 @@
             position: fixed;
             top: 0;
             left: 0;
-            width: 100vw;
+            width:160vw;
             height: 100vh;
             z-index: 1;
             pointer-events: none;
-        }
-
-        /* ОБЁРТКА ЛОГО С СВЕЧЕНИЕМ */
-        .logo-top-right-wrapper {
-            position: absolute;
-            top: 10%;
-            right: 7%;
-            z-index: 14; /* ниже самого логотипа */
-            width: 14vw;
-            max-width: 220px;
-            min-width: 150px;
-            height: auto;
-            pointer-events: none;
-        }
-
-        .logo-top-right-wrapper::before {
-            content: '';
-            position: absolute;
-            inset: -20px;
-            border-radius: 999px;
-            background: radial-gradient(circle,
-                rgba(255,255,255,0.85) 0%,
-                rgba(153,102,255,0.6) 35%,
-                rgba(0,0,0,0) 70%
-            );
-            filter: blur(10px);
-            opacity: 0.65;
-            animation: logoGlow 3s ease-in-out infinite;
-        }
-
-        @keyframes logoGlow {
-            0%   { opacity: 0.25; transform: scale(0.97); }
-            50%  { opacity: 0.55; transform: scale(1.03); }
-            100% { opacity: 0.25; transform: scale(0.97); }
-        }
-
-        /* сам логотип */
-        .logo-top-right {
-            position: relative; /* внутри обёртки */
-            z-index: 15;
-            width: 100%;        /* подстраивается под wrapper */
-            height: auto;
-            opacity: 0.85;
-            pointer-events: none;
-            display: block;
         }
 
         /* затемнение сверху под IV и подпись */
@@ -137,29 +92,6 @@
         .cta:hover {
             transform: scale(1.1);
             text-shadow: 0 0 20px #fff;
-        }
-
-        /* QR — квадратный и адаптивный */
-        .qr-code {
-            position: absolute;
-            bottom: 10%;
-            right: 8%;
-
-            width: 170px;
-            height: 170px;
-            max-width: 40vw;
-            max-height: 40vw;
-
-            background: url('photo_2026-01-13_13-23-04.jpg') no-repeat center;
-            background-size: contain;
-            padding: 8px;
-            background-color: rgba(255,255,255,0.95);
-            border: 2px solid rgba(255,255,255,0.3);
-            border-radius: 15px;
-            box-shadow: 0 0 20px rgba(255,255,255,0.5);
-            pointer-events: auto;
-            z-index: 20;
-            animation: pulse 2s infinite ease-in-out;
         }
 
         .scrolling-text-center,
@@ -348,11 +280,6 @@
               disable-tap>
     </model-viewer>
 
-    <!-- логотип с анимированным свечением -->
-    <div class="logo-top-right-wrapper">
-        <img src="logo.png" alt="IV Logo" class="logo-top-right">
-    </div>
-
     <!-- верхняя затемнённая плашка -->
     <div class="top-overlay"></div>
 
@@ -363,7 +290,6 @@
         </div>
 
         <div class="cta" onclick="window.open('https://t.me/ivdevv', '_blank')">TELEGRAM></div>
-        <div class="qr-code" onclick="window.open('https://t.me/ivdevv', '_blank')"></div>
         
         <div class="scrolling-text-center">
             <div class="track">
