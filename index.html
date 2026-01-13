@@ -131,11 +131,11 @@
 
         @keyframes scroll-center {
             0% { transform: translateX(0); }
-            100% { transform: translateX(-50%); }
+            100% { transform: translateX(-100%); } /* ✅ Полный цикл */
         }
         @keyframes scroll-bottom {
             0% { transform: translateX(0); }
-            100% { transform: translateX(-50%); }
+            100% { transform: translateX(-100%); } /* ✅ Полный цикл */
         }
         @keyframes pulse {
             0% { transform: scale(1); box-shadow: 0 0 20px rgba(255,255,255,0.5); }
@@ -191,14 +191,14 @@
         const ambient = new THREE.AmbientLight(0x3a3a6a, 0.3);
         scene.add(ambient);
 
-        // Загрузка публичной модели (работает без CORS)
+        // Загрузка публичной модели — анимированный персонаж
         let model = null;
         const loader = new THREE.GLTFLoader();
         loader.load(
-            'https://raw.githubusercontent.com/KhronosGroup/glTF-Sample-Models/master/2.0/DamagedHelmet/glTF-Binary/DamagedHelmet.glb',
+            'https://raw.githubusercontent.com/KhronosGroup/glTF-Sample-Models/master/2.0/RiggedFigure/glTF-Binary/RiggedFigure.glb',
             (gltf) => {
                 model = gltf.scene;
-                model.scale.set(2, 2, 2);
+                model.scale.set(0.8, 0.8, 0.8);
                 model.position.y = -1;
                 scene.add(model);
             },
