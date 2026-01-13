@@ -89,7 +89,6 @@
         }
 
         /* Бегущие строки */
-
         .scrolling-text-center,
         .scrolling-text-bottom {
             position: absolute;
@@ -167,7 +166,6 @@
         </div>
     </div>
 
-    <!-- Three.js + GLTFLoader как ES-модуль -->
     <script type="module">
         import * as THREE from 'https://cdn.jsdelivr.net/npm/three@0.160.1/build/three.module.js';
         import { GLTFLoader } from 'https://cdn.jsdelivr.net/npm/three@0.160.1/examples/jsm/loaders/GLTFLoader.js';
@@ -199,22 +197,12 @@
         const loader = new GLTFLoader();
 
         loader.load(
-            'kuma_heavy_robot_r-9000s.glb', // лежит рядом с index.html
+            'kuma_heavy_robot_r-9000s.glb',
             (gltf) => {
                 model = gltf.scene;
-
-                // немного поджирним и поднимем, чтобы точно было в кадре
                 model.scale.set(5, 5, 5);
                 model.position.set(0, -0.5, 0);
                 model.rotation.y = Math.PI * 0.15;
-
-                model.traverse((child) => {
-                    if (child.isMesh) {
-                        child.castShadow = true;
-                        child.receiveShadow = true;
-                    }
-                });
-
                 scene.add(model);
             },
             undefined,
