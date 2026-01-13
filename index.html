@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>IV - UNITY DEVELOPER</title>
+    <title>IV - UNITY 222DEVELOPER</title>
     <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&display=swap" rel="stylesheet">
     <style>
         * {
@@ -172,11 +172,16 @@
         </div>
     </div>
 
-    <script type="module">
-        import * as THREE from 'https://cdn.jsdelivr.net/npm/three@0.160.1/build/three.module.js';
-        import { GLTFLoader } from 'https://cdn.jsdelivr.net/npm/three@0.160.1/examples/jsm/loaders/GLTFLoader.js';
+    <!-- three.js и GLTFLoader через старый CDN-API, без type="module" -->
+    <script src="https://cdn.jsdelivr.net/npm/three@0.121.1/build/three.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.121.1/examples/js/loaders/GLTFLoader.js"></script>
 
-        const canvas = document.getElementById("hero-canvas");
+    <script>
+        const canvas = document.getElementById('hero-canvas');
+        const renderer = new THREE.WebGLRenderer({ canvas: canvas, antialias: true });
+        renderer.setSize(window.innerWidth, window.innerHeight);
+        renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+
         const scene = new THREE.Scene();
         scene.background = new THREE.Color(0x8a2be2);
 
@@ -188,10 +193,6 @@
         );
         camera.position.set(0, 1, 3);
 
-        const renderer = new THREE.WebGLRenderer({ canvas, antialias: true });
-        renderer.setSize(window.innerWidth, window.innerHeight);
-        renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
-
         const dirLight = new THREE.DirectionalLight(0xffffff, 1.5);
         dirLight.position.set(4, 4, 5);
         scene.add(dirLight);
@@ -200,21 +201,19 @@
         scene.add(ambient);
 
         let model = null;
-        const loader = new GLTFLoader();
+        const loader = new THREE.GLTFLoader();
 
         loader.load(
             'kuma_heavy_robot_r-9000s.glb',
-            (gltf) => {
+            function (gltf) {
                 model = gltf.scene;
                 model.scale.set(10, 10, 10);
                 model.position.set(0, -1, 0);
-                model.rotation.set(0, 0, 0);
                 scene.add(model);
-
                 camera.lookAt(0, 0, 0);
             },
             undefined,
-            (error) => {
+            function (error) {
                 console.error('Ошибка загрузки модели:', error);
                 const geo = new THREE.IcosahedronGeometry(2, 4);
                 const mat = new THREE.MeshStandardMaterial({
@@ -223,24 +222,16 @@
                     roughness: 0.2
                 });
                 const fallback = new THREE.Mesh(geo, mat);
-                fallback.position.set(0, 0, 0);
                 scene.add(fallback);
             }
         );
 
-        let mouseX = 0, mouseY = 0;
-        window.addEventListener("mousemove", (e) => {
-            mouseX = (e.clientX / window.innerWidth) * 2 - 1;
-            mouseY = -(e.clientY / window.innerHeight) * 2 + 1;
-        });
-
-        window.addEventListener("resize", () => {
+        window.addEventListener('resize', function () {
             camera.aspect = window.innerWidth / window.innerHeight;
             camera.updateProjectionMatrix();
             renderer.setSize(window.innerWidth, window.innerHeight);
         });
 
-        // временно без вращения от мыши, чтобы не мешало дебагу
         function animate() {
             requestAnimationFrame(animate);
             renderer.render(scene, camera);
