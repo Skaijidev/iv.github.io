@@ -4,17 +4,20 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>IV - UNITY 111DEVELOPER</title>
-    <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&display=swap" rel="stylesheet">
 
-    <!-- model-viewer -->
+    <!-- Bebas для заголовков + Open Sans для попапа -->
+    <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Open+Sans:wght@400;600&display=swap" rel="stylesheet">
+
     <script type="module" src="https://unpkg.com/@google/model-viewer/dist/model-viewer.min.js"></script>
 
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        html, body {
+            -webkit-text-size-adjust: 100%;
+            text-size-adjust: 100%;
         }
+
         body {
             width: 100vw;
             height: 100vh;
@@ -24,8 +27,6 @@
             overflow: hidden;
             position: relative;
         }
-
-        /* модель на фоне на весь экран */
         model-viewer {
             position: fixed;
             top: 0;
@@ -33,24 +34,81 @@
             width: 100vw;
             height: 100vh;
             z-index: 1;
-            pointer-events: none; /* чтобы клики шли по верхнему UI */
+            pointer-events: none;
         }
 
-        .container {
+        /* ОБЁРТКА ЛОГО С СВЕЧЕНИЕМ */
+        .logo-top-right-wrapper {
+            position: absolute;
+            top: 10%;
+            right: 7%;
+            z-index: 14; /* ниже самого логотипа */
+            width: 14vw;
+            max-width: 220px;
+            min-width: 150px;
+            height: auto;
+            pointer-events: none;
+        }
+
+        .logo-top-right-wrapper::before {
+            content: '';
+            position: absolute;
+            inset: -20px;
+            border-radius: 999px;
+            background: radial-gradient(circle,
+                rgba(255,255,255,0.85) 0%,
+                rgba(153,102,255,0.6) 35%,
+                rgba(0,0,0,0) 70%
+            );
+            filter: blur(10px);
+            opacity: 0.65;
+            animation: logoGlow 3s ease-in-out infinite;
+        }
+
+        @keyframes logoGlow {
+            0%   { opacity: 0.25; transform: scale(0.97); }
+            50%  { opacity: 0.55; transform: scale(1.03); }
+            100% { opacity: 0.25; transform: scale(0.97); }
+        }
+
+        /* сам логотип */
+        .logo-top-right {
+            position: relative; /* внутри обёртки */
+            z-index: 15;
+            width: 100%;        /* подстраивается под wrapper */
+            height: auto;
+            opacity: 0.85;
+            pointer-events: none;
+            display: block;
+        }
+
+        /* затемнение сверху под IV и подпись */
+        .top-overlay {
             position: absolute;
             top: 0;
             left: 0;
             width: 100%;
-            height: 100%;
+            height: 30%;
+            background: linear-gradient(
+                rgba(0, 0, 0, 0.75),
+                rgba(0, 0, 0, 0)
+            );
+            z-index: 6;
+            pointer-events: none;
+        }
+
+        .container {
+            position: absolute;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
             pointer-events: none;
             z-index: 10;
         }
         .text {
             position: absolute;
-            top: 5%;
+            top: 15%;
             left: 5%;
             z-index: 10;
-            pointer-events: none;
         }
         .text h1 {
             font-size: 7rem;
@@ -80,15 +138,21 @@
             transform: scale(1.1);
             text-shadow: 0 0 20px #fff;
         }
+
+        /* QR — квадратный и адаптивный */
         .qr-code {
             position: absolute;
-            bottom: 20px;
-            right: 20px;
-            width: 180px;
-            height: 180px;
+            bottom: 10%;
+            right: 8%;
+
+            width: 170px;
+            height: 170px;
+            max-width: 40vw;
+            max-height: 40vw;
+
             background: url('photo_2026-01-13_13-23-04.jpg') no-repeat center;
             background-size: contain;
-            padding: 10px;
+            padding: 8px;
             background-color: rgba(255,255,255,0.95);
             border: 2px solid rgba(255,255,255,0.3);
             border-radius: 15px;
@@ -108,64 +172,189 @@
             white-space: nowrap;
         }
 
+        /* центральная бегущая строка на оранжевой плашке */
         .scrolling-text-center {
             top: 50%;
             margin-top: -40px;
-            color: white;
-            font-family: 'Bebas Neue', sans-serif;
             font-size: 5.5rem;
             z-index: 5;
             text-shadow: 0 0 20px rgba(0,0,0,0.8);
+
+            background: rgba(255, 140, 0, 0.8);
+            backdrop-filter: blur(4px);
+            padding: 10px 0;
         }
 
         .scrolling-text-bottom {
             bottom: 0;
             height: 36px;
             background: rgba(0,0,0,0.3);
-            color: white;
-            font-family: 'Bebas Neue', sans-serif;
             font-size: 1.3rem;
             z-index: 15;
         }
-
-        .track {
-            display: inline-flex;
-        }
-
+        .track { display: inline-flex; }
         .track span {
             display: inline-block;
             padding-right: 3rem;
             animation: marquee 20s linear infinite;
         }
-
-        .scrolling-text-center .track span {
-            animation-duration: 25s;
-        }
+        .scrolling-text-center .track span { animation-duration: 25s; }
 
         @keyframes marquee {
             0%   { transform: translateX(0); }
             100% { transform: translateX(-100%); }
         }
-
         @keyframes pulse {
             0%   { transform: scale(1); box-shadow: 0 0 20px rgba(255,255,255,0.5); }
             50%  { transform: scale(1.05); box-shadow: 0 0 30px rgba(255,255,255,0.8); }
             100% { transform: scale(1); box-shadow: 0 0 20px rgba(255,255,255,0.5); }
         }
+
+        /* кнопка Projects слева сверху */
+        .projects-button {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            z-index: 25;
+            cursor: pointer;
+            pointer-events: auto;
+
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 6px 12px;
+            border-radius: 999px;
+
+            background: rgba(0,0,0,0.55);
+            border: 1px solid rgba(255,255,255,0.3);
+            box-shadow: 0 0 10px rgba(0,0,0,0.7);
+            font-size: 1.1rem;
+        }
+
+        .projects-button-icon {
+            width: 18px;
+            height: 18px;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+
+        .projects-button-icon span {
+            display: block;
+            height: 3px;
+            border-radius: 2px;
+            background: #ffffff;
+        }
+
+        .projects-button-label {
+            letter-spacing: 1px;
+        }
+
+        /* затемнение экрана */
+        .modal-overlay {
+            position: fixed;
+            inset: 0;
+            background: rgba(0,0,0,0.75);
+            z-index: 30;
+            display: none;
+            align-items: center;
+            justify-content: center;
+        }
+
+        /* модалка: шире и адаптивная */
+        .modal {
+            background: rgba(20,20,20,0.96);
+            border-radius: 16px;
+            padding: 20px 24px;
+
+            width: 80vw;
+            max-width: 900px;
+            min-width: 280px;
+            max-height: 70vh;
+
+            box-shadow: 0 0 30px rgba(0,0,0,0.8);
+            display: flex;
+            flex-direction: column;
+
+            /* отдельный шрифт для контента попапа */
+            font-family: 'Open Sans', system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 12px;
+        }
+
+        .modal-title {
+            font-size: 1.6rem;
+            letter-spacing: 1px;
+        }
+
+        .modal-close {
+            cursor: pointer;
+            font-size: 1.8rem;
+            line-height: 1;
+        }
+
+        .modal-content {
+            margin-top: 8px;
+            padding-right: 6px;
+            overflow-y: auto;
+            max-height: 55vh;
+            font-size: 16px;
+            line-height: 1.4;
+        }
+
+        .project-item {
+            margin-bottom: 10px;
+            padding-bottom: 8px;
+            border-bottom: 1px solid rgba(255,255,255,0.12);
+        }
+
+        .project-item:last-child {
+            border-bottom: none;
+        }
+
+        .project-item strong {
+            font-weight: 700;
+        }
     </style>
 </head>
 <body>
+    <!-- кнопка Projects -->
+    <div class="projects-button" id="menuBtn">
+        <div class="projects-button-icon">
+            <span></span>
+            <span></span>
+            <span></span>
+        </div>
+        <div class="projects-button-label">Projects</div>
+    </div>
+
     <!-- 3D модель как фон -->
-    <model-viewer src="kuma_heavy_robot_r-9000s.glb"
-                  alt="Robot"
-                  auto-rotate
-                  camera-controls
-                  camera-orbit="0deg 75deg 6m"
-                  exposure="1.1"
-                  shadow-intensity="0.4"
-                  environment-image="neutral"
-                  disable-tap>
+    <model-viewer id="mw"
+              src="kuma_heavy_robot_r-9000s.glb"
+              alt="Robot"
+              auto-rotate
+              camera-controls
+              camera-orbit="0deg 115deg 24m"
+              camera-target="0m 0m 0m"
+              field-of-view="14deg"
+              exposure="1.1"
+              shadow-intensity="0.4"
+              environment-image="neutral"
+              disable-tap>
     </model-viewer>
+
+    <!-- логотип с анимированным свечением -->
+    <div class="logo-top-right-wrapper">
+        <img src="logo.png" alt="IV Logo" class="logo-top-right">
+    </div>
+
+    <!-- верхняя затемнённая плашка -->
+    <div class="top-overlay"></div>
 
     <div class="container">
         <div class="text">
@@ -189,8 +378,93 @@
                 <span>INN: 10024829459 | OGRNIP: 222999101</span>
                 <span>INN: 10024829459 | OGRNIP: 222999101</span>
                 <span>INN: 10024829459 | OGRNIP: 222999101</span>
+                <span>INN: 10024829459 | OGRNIP: 222999101</span>
+                <span>INN: 10024829459 | OGRNIP: 222999101</span>
+                <span>INN: 10024829459 | OGRNIP: 222999101</span>
+                <span>INN: 10024829459 | OGRNIP: 222999101</span>
+                <span>INN: 10024829459 | OGRNIP: 222999101</span>
+                <span>INN: 10024829459 | OGRNIP: 222999101</span>
+                <span>INN: 10024829459 | OGRNIP: 222999101</span>
             </div>
         </div>
     </div>
+
+    <!-- затемнение + модалка с проектами -->
+    <div class="modal-overlay" id="projectsOverlay">
+        <div class="modal">
+            <div class="modal-header">
+                <div class="modal-title">Projects</div>
+                <div class="modal-close" id="modalClose">&times;</div>
+            </div>
+            <div class="modal-content">
+                <div class="project-item">
+                    <strong>Музей мирового океана:</strong> тимлид, разработка проектов в сотрудничестве с музейным бюро Метаформа
+                </div>
+                <div class="project-item">
+                    <strong>Барсова гора:</strong> разработка проектов в сотрудничестве с музейным бюро Метаформа
+                </div>
+                <div class="project-item">
+                    <strong>Музей ФСБ, Тула:</strong> разработка проектов в сотрудничестве с музейным бюро Метаформа
+                </div>
+                <div class="project-item">
+                    <strong>Музей эпидемиологии, Казахстан:</strong> разработка проектов в сотрудничестве с музейным бюро Метаформа
+                </div>
+                <div class="project-item">
+                    <strong>Музей Дорога жизни:</strong> разработка проектов в сотрудничестве с музейным бюро Метаформа
+                </div>
+                <div class="project-item">
+                    <strong>Музей, Университет в лаптях:</strong> тимлид
+                </div>
+                <div class="project-item">
+                    <strong>Музей, Газпром — Академия Зенит:</strong> разработка проектов в сотрудничестве с музейным бюро Метаформа
+                </div>
+                <div class="project-item">
+                    <strong>Trade Wars:</strong> разработка игры, обновления
+                </div>
+                <div class="project-item">
+                    <strong>Ideology Rush:</strong> обновления
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script type="module">
+        const mw = document.getElementById('mw');
+
+        mw.addEventListener('load', () => {
+            const sceneSym = Object.getOwnPropertySymbols(mw)
+                .find(s => s.description === 'scene');
+            if (!sceneSym) return;
+
+            const internalScene = mw[sceneSym];
+            if (!internalScene || !internalScene.children || !internalScene.children[0]) return;
+
+            const root = internalScene.children[0];
+
+            // масштаб
+            root.scale.set(0.55, 0.55, 0.55);
+
+            // вертикальный сдвиг
+            root.position.y += 2.0;
+        });
+
+        const menuBtn = document.getElementById('menuBtn');
+        const overlay = document.getElementById('projectsOverlay');
+        const modalClose = document.getElementById('modalClose');
+
+        menuBtn.addEventListener('click', () => {
+            overlay.style.display = 'flex';
+        });
+
+        modalClose.addEventListener('click', () => {
+            overlay.style.display = 'none';
+        });
+
+        overlay.addEventListener('click', (e) => {
+            if (e.target === overlay) {
+                overlay.style.display = 'none';
+            }
+        });
+    </script>
 </body>
 </html>
