@@ -4,19 +4,62 @@
   <meta charset="utf-8" />
   <title>My 3D Hero</title>
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <link rel="stylesheet" href="style.css" />
-  <!-- Three.js CDN (stable version r160) -->
-  <script src="https://unpkg.com/three@r158/build/three.min.js"></script>
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+    body {
+      background: #0a0e27;
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      color: #fff;
+      height: 100vh;
+      overflow: hidden;
+    }
+    .hero {
+      position: relative;
+      width: 100vw;
+      height: 100vh;
+    }
+    #hero-canvas {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      display: block;
+    }
+    .hero-ui {
+      position: relative;
+      z-index: 10;
+      pointer-events: none;
+      height: 100%;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      padding-left: 8vw;
+    }
+    .hero-ui h1 {
+      font-size: clamp(2.8rem, 5vw, 4.5rem);
+      margin-bottom: 0.75rem;
+    }
+    .hero-ui p {
+      font-size: clamp(1rem, 1.4vw, 1.25rem);
+      opacity: 0.75;
+      max-width: 360px;
+    }
+  </style>
 </head>
 <body>
   <div class="hero">
-     <canvas сanvas id="hero-canvas"></canvas>
+    anvas id="hero-canvas"></canvas>
     <div class="hero-ui">
       <h1>Мой 3D сайт</h1>
       <p>Интерактивный объект, реагирующий на курсор.</p>
     </div>
   </div>
 
+  <script src="https://cdn.jsdelivr.net/npm/three@r128/build/three.min.js"></script>
   <script src="main.js"></script>
 </body>
 </html>
